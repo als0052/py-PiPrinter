@@ -163,7 +163,7 @@ def _writer_thing(list_lines, filename, chunk_size, iteration=0):
 		return iteration + 1
 
 
-def main(x=1000, chunk_size=500):
+def main(x=1000, chunk_size=500, col_width=79):
 	"""Do all the stuff
 
 		:param x: The number of digits of pi to print. Default is 1,000.
@@ -174,7 +174,7 @@ def main(x=1000, chunk_size=500):
 	"""
 	print("\tRunning...")
 	print(f'\tCalculating {x} digits of pi...')
-	print_digits(col_width=12, x_digits=x, chunk_size=chunk_size)
+	print_digits(col_width=col_width, x_digits=x, chunk_size=chunk_size)
 
 	print(f'Finished formatting {x} digits of Pi.')
 	return None
@@ -183,4 +183,4 @@ def main(x=1000, chunk_size=500):
 if __name__ == "__main__":
 	# 1,000,000 digits = 44268.841465473175 seconds
 	# main(x=100000, chunk_size=500)
-	main(x=10000, chunk_size=10)
+	main(x=1000000, chunk_size=10, col_width=80)

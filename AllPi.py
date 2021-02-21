@@ -11,7 +11,7 @@ functions in module ``all_the_pi.py``. This module supersedes module
 
 Created by als0052
 Created on 02-16-2021
-Updated on 02-16-2021
+Updated on 02-19-2021
 """
 
 from datetime import datetime as dt
@@ -116,6 +116,8 @@ class AllPi:
 			a, b, a1, b1 = a1, b1, p*a + q*a1, p*b + q*b1
 			d, d1 = a/b, a1/b1
 			while d == d1 and self.x_digits > 0:
+				if np.mod(self.x_digits, 100000) == 0:
+					print(f'x is {self.x_digits}')
 				yield int(d)
 				self.x_digits -= 1
 				a, a1 = 10*(a % b), 10*(a1 % b1)
@@ -156,7 +158,7 @@ class AllPi:
 			print(f'\tWrote {self.chunk_size} lines to file. Saving file...')
 		if len(self.list_lines) > 0:  # recursion case
 			self.iteration += 1
-			self._write_digits()
+			# self._write_digits()  # Recursion error
 		return self
 
 	def print_digits(self, verbose=False):
@@ -197,7 +199,8 @@ class AllPi:
 			self.list_lines.append("".join(str(int(_)) for _ in all_pi[row]))
 
 		self._checkpoint()
-		self._write_digits(verbose=verbose)
+		while len(self.list_lines) > 0:
+			self._write_digits(verbose=verbose)
 		if verbose:
 			print(f"\nFinished formatting {self.n:,} digits of Pi...")
 			print(f'\tIterations: {self.iteration}')
@@ -216,10 +219,17 @@ def main(x=1000, chunk_size=10, col_width=12):
 		:param col_width: The width of the column to print. Default is 12.
 		:type col_width: int
 	"""
+	print('Running...')
 	ap = AllPi(x=x, chunk_size=chunk_size, col_width=col_width)
 	ap.print_digits(verbose=True)
 	return None
 
 
 if __name__ == "__main__":
-	main(x=10000, chunk_size=10, col_width=50)
+	# Without line numbers in Notepad++
+	# Runs and finishes instantly
+	# main(x=10000, chunk_size=10, col_width=91)
+	
+	# With line numbers in Notepad++
+	# Will take a few minutes (hours?) to complete
+	main(x=1000000, chunk_size=10, col_width=89)
