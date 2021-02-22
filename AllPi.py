@@ -9,9 +9,16 @@ This module contains a class that accomplishes all the functionality of the
 functions in module ``all_the_pi.py``. This module supersedes module
 ``all_the_pi.py``
 
+
+.. todo:: See also the experimental module ``calc_pi.py`` and compare it's 
+          profile against current method used to calculate pi. Use whichever 
+		  one is more efficient for larger digits of pi. Perhaps switch 
+		  between the two depending on how many digits are requested for 
+		  output.
+
 Created by als0052
 Created on 02-16-2021
-Updated on 02-19-2021
+Updated on 02-22-2021
 """
 
 from datetime import datetime as dt
@@ -51,8 +58,11 @@ class AllPi:
 
 		n: The total number of digits requested. This is the same as the
 		   parameter ``x`` used during object creation.
+		
+		.. todo:: Convert to use generators as much as possible. See also: 
+		          https://realpython.com/introduction-to-python-generators/
 	"""
-	def __init__(self, x=1000, col_width=12, fn=None, chunk_size=10,
+	def __init__(self, x=1000, col_width=89, fn=None, chunk_size=10,
 	             cp=None):
 		self.x_digits = x
 		self._total_digits = x
@@ -70,10 +80,6 @@ class AllPi:
 			       f"would be excessive.")
 			raise RuntimeError(msg)		
 
-		# todo: This will need some thought before it can be added to the logic
-		# if self.chunk_size is None or self.chunk_size == 0:
-		# 	# print output in one continuous block
-		# 	pass
 		if np.mod(self.chunk_size, 5) != 0:
 			print('chunk_size must be a positive multiple of 5')
 			ncs = int(math.ceil(abs(self.chunk_size)/5.0))*5
@@ -108,7 +114,9 @@ class AllPi:
 			Shamelessly usurped from StackOverflow
 			https://stackoverflow.com/a/54967370/11895567
 
-			Not sure what this method is doing but it works. Do not	touch.
+			Appears to use a Spigot algorithm to generate pi
+			
+			.. todo:: This method needs optimization. Treat it like a stream?
 		"""
 		k, a, b, a1, b1 = 2, 4, 1, 12, 4
 		while self.x_digits > 0:
@@ -116,8 +124,8 @@ class AllPi:
 			a, b, a1, b1 = a1, b1, p*a + q*a1, p*b + q*b1
 			d, d1 = a/b, a1/b1
 			while d == d1 and self.x_digits > 0:
-				if np.mod(self.x_digits, 100000) == 0:
-					print(f'x is {self.x_digits}')
+				# if np.mod(self.x_digits, 100000) == 0:
+				# 	print(f'x is {self.x_digits}')
 				yield int(d)
 				self.x_digits -= 1
 				a, a1 = 10*(a % b), 10*(a1 % b1)
@@ -149,16 +157,11 @@ class AllPi:
 				pi_out.write(self.list_lines.pop(0))
 				pi_out.write("\n")
 				if np.mod(i+1, self.chunk_size) == 0:
-					# todo: Write header between each chunk similar to how
-					#       NASTRAN does .f06 files
 					pi_out.write("\n")
-					# s = f'\n{(self.col_width+2)*" "}{i}\n'
-					# pi_out.write(s)
 		if verbose:
 			print(f'\tWrote {self.chunk_size} lines to file. Saving file...')
-		if len(self.list_lines) > 0:  # recursion case
+		if len(self.list_lines) > 0:
 			self.iteration += 1
-			# self._write_digits()  # Recursion error
 		return self
 
 	def print_digits(self, verbose=False):
@@ -183,8 +186,6 @@ class AllPi:
 		number_rows = np.floor_divide(number_elements, self.col_width)
 
 		if np.mod(number_elements, self.col_width) != 0:
-			# Add zeros to the end of the array to make it evenly divisible by
-			# self.col_width
 			# todo: Fill the line with spaces instead of zeros.
 			missing_elements = np.mod(number_elements, self.col_width)
 			missing_elements = self.col_width - missing_elements
@@ -231,5 +232,6 @@ if __name__ == "__main__":
 	# main(x=10000, chunk_size=10, col_width=91)
 	
 	# With line numbers in Notepad++
-	# Will take a few minutes (hours?) to complete
+	# Will take a few hours to complete
+	# Can evenly fit 5x blocks of 10x lines per page
 	main(x=1000000, chunk_size=10, col_width=89)
