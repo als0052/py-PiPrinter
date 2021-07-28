@@ -1,7 +1,0 @@
-123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 
-
-/* For printing without line numbers turned on in NotePad++ use 91 character width      */
-/*----------------------------------91 character width----------------------------------*/
-
-/* For printing with line numbers turned on in NotePad++ use 89 character width       */
-/*---------------------------------89 character width---------------------------------*/
